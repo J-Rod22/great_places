@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspaths;
+
 
 import 'package:image_picker/image_picker.dart';
 
@@ -17,6 +20,16 @@ class _ImageInputState extends State<ImageInput> {
       source: ImageSource.camera,
       maxWidth: 600,
     );
+
+    final File imagePathTaken = File(imageFile.path);
+    setState(() {
+      _storedImage = imagePathTaken;
+    });
+
+    //copying photo to device storage
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
+    final fileName = path.basename(imagePathTaken.path);
+    final savedImage = await imagePathTaken.copy('${appDir.path}/$fileName');
   }
 
   @override
